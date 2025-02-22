@@ -49,25 +49,53 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function renderClients() {
-        const clientsTable = document.getElementById("clients-table");
-        clientsTable.innerHTML = "";
+        const clientsList = document.getElementById("clients-list");
+        clientsList.innerHTML = "";
         clients.forEach((client, index) => {
-            const row = document.createElement("tr");
-            row.className = "table-row";
-            row.innerHTML = `
-                <td class="py-4 px-4 text-sm text-gray-300">${client.name}</td>
-                <td class="py-4 px-4 text-sm text-gray-300">${client.email}</td>
-                <td class="py-4 px-4 text-sm text-gray-300">${client.phone || "N/A"}</td>
-                <td class="py-4 px-4 text-sm"><span class="status-${client.status.toLowerCase()}">${client.status}</span></td>
-                <td class="py-4 px-4 text-sm">
-                    <button class="edit-client-btn text-blue-400 hover:text-blue-500 text-xs px-2 py-1 bg-transparent border border-blue-600 rounded-lg" data-index="${index}">Editează</button>
-                    <button class="delete-client-btn text-red-400 hover:text-red-500 text-xs px-1 py-0.5 bg-transparent border border-red-600 rounded-lg" data-index="${index}">Șterge</button>
-                </td>
-            `;
-            clientsTable.appendChild(row);
+            const width = window.innerWidth;
+            if (width <= 767) {
+                // Pe mobil: afișăm ca card
+                const card = document.createElement("div");
+                card.className = "order-item p-3 bg-gray-900 border border-blue-600 rounded-lg shadow-sm";
+                card.innerHTML = `
+                    <div class="flex flex-col space-y-2">
+                        <h4 class="text-sm font-medium text-white">Nume: ${client.name}</h4>
+                        <p class="text-xs text-gray-400">Email: ${client.email}</p>
+                        <p class="text-xs text-gray-400">Telefon: ${client.phone || "N/A"}</p>
+                        <p class="text-xs text-gray-400">Status: <span class="status-${client.status.toLowerCase()}">${client.status}</span></p>
+                        <div class="flex space-x-2">
+                            <button class="edit-client-btn text-blue-400 hover:text-blue-500 text-xs px-2 py-1 bg-transparent border border-blue-600 rounded-lg" data-index="${index}">Editează</button>
+                            <button class="delete-client-btn text-red-400 hover:text-red-500 text-xs px-1 py-0.5 bg-transparent border border-red-600 rounded-lg" data-index="${index}">Șterge</button>
+                        </div>
+                    </div>
+                `;
+                clientsList.appendChild(card);
+            } else {
+                // Pe desktop/tablete: afișăm ca tabel
+                const row = document.createElement("div");
+                row.className = "table-row hidden md:block";
+                row.innerHTML = `
+                    <div class="py-4 px-4 text-sm text-gray-300">${client.name}</div>
+                    <div class="py-4 px-4 text-sm text-gray-300">${client.email}</div>
+                    <div class="py-4 px-4 text-sm text-gray-300">${client.phone || "N/A"}</div>
+                    <div class="py-4 px-4 text-sm"><span class="status-${client.status.toLowerCase()}">${client.status}</span></div>
+                    <div class="py-4 px-4 text-sm">
+                        <button class="edit-client-btn text-blue-400 hover:text-blue-500 text-xs px-2 py-1 bg-transparent border border-blue-600 rounded-lg" data-index="${index}">Editează</button>
+                        <button class="delete-client-btn text-red-400 hover:text-red-500 text-xs px-1 py-0.5 bg-transparent border border-red-600 rounded-lg" data-index="${index}">Șterge</button>
+                    </div>
+                `;
+                clientsList.appendChild(row);
+            }
 
-            row.querySelector(".edit-client-btn").addEventListener("click", () => editClient(index));
-            row.querySelector(".delete-client-btn").addEventListener("click", () => deleteClient(index));
+            if (width <= 767) {
+                // Event listeners pentru card-uri pe mobil
+                card.querySelector(".edit-client-btn").addEventListener("click", () => editClient(index));
+                card.querySelector(".delete-client-btn").addEventListener("click", () => deleteClient(index));
+            } else {
+                // Event listeners pentru rânduri pe desktop
+                row.querySelector(".edit-client-btn").addEventListener("click", () => editClient(index));
+                row.querySelector(".delete-client-btn").addEventListener("click", () => deleteClient(index));
+            }
         });
     }
 
@@ -125,6 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
             sidebar.style.transform = "none";
             mainContent.style.marginLeft = "20rem";
         }
+        renderClients(); // Re-renderizează clienții la redimensionare
     };
 
     window.addEventListener("resize", handleResize);
