@@ -24,13 +24,14 @@ body {
     left: 0;
     width: 16rem; /* Forțăm 64 în Tailwind (16rem) pentru consistență */
     height: 100%;
-    transition: width 0.3s ease;
+    transition: width 0.3s ease, transform 0.3s ease; /* Adăugăm tranziție pentru transform */
     backdrop-filter: blur(10px);
     background: rgba(30, 41, 59, 0.8);
     z-index: 10;
     overflow-y: auto; /* Permite derularea dacă conținutul e lung */
     display: block !important; /* Forțăm afișarea sidebar-ului */
     visibility: visible !important; /* Asigurăm vizibilitatea */
+    transform: translateX(-100%); /* Ascundem sidebar-ul pe mobil, deplasându-l în stânga */
 }
 
 .sidebar:hover {
@@ -45,6 +46,46 @@ body {
 .sidebar-item:hover {
     background: rgba(255, 255, 255, 0.1);
     padding-left: 1.5rem;
+}
+
+/* Meniu hamburger pe mobil */
+.hamburger {
+    display: none; /* Inițial ascuns pe desktop */
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 20;
+    cursor: pointer;
+    color: #e2e8f0;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    background: rgba(30, 41, 59, 0.8);
+    border-radius: 0.5rem;
+}
+
+/* Media query pentru mobil (sub 768px) */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block; /* Afișăm meniul hamburger pe mobil */
+    }
+
+    .sidebar {
+        transform: translateX(-100%); /* Sidebar ascuns complet pe mobil */
+        width: 16rem; /* Păstrăm lățimea */
+    }
+
+    .sidebar.active {
+        transform: translateX(0); /* Sidebar vizibil când e activ */
+    }
+
+    .main-content {
+        margin-left: 0; /* Eliminăm margin-left pe mobil */
+        transition: margin-left 0.3s ease; /* Adăugăm tranziție pentru margin */
+    }
+
+    .main-content.active {
+        margin-left: 16rem; /* Margin-left când sidebar-ul e activ */
+    }
 }
 
 /* -------------------------------- */
@@ -74,7 +115,7 @@ body {
 
 /* Header specific pentru Dashboard */
 #particles-js + .flex > .main-content .flex.justify-between.items-center {
-    padding-right: 0; /* Eliminăm padding-ul suplimentar, ca să nu influențeze layout-ul */
+    padding-right: 0;
 }
 
 /* -------------------------------- */
