@@ -24,14 +24,11 @@ body {
     left: 0;
     width: 16rem; /* Lățime default (256px) */
     height: 100%;
-    transition: width 0.3s ease, transform 0.3s ease;
+    transition: width 0.3s ease;
     backdrop-filter: blur(10px);
     background: rgba(30, 41, 59, 0.8);
     z-index: 10;
     overflow-y: auto;
-    display: block; /* Afișăm explicit sidebar-ul */
-    visibility: visible !important;
-    transform: translateX(-100%); /* Ascuns pe mobil inițial */
 }
 
 .sidebar:hover {
@@ -46,86 +43,6 @@ body {
 .sidebar-item:hover {
     background: rgba(255, 255, 255, 0.1);
     padding-left: 1.5rem;
-}
-
-/* Meniu hamburger pe mobil */
-.hamburger {
-    display: none;
-    position: fixed;
-    top: 0.5rem;
-    left: 0.5rem;
-    z-index: 20;
-    cursor: pointer;
-    color: #e2e8f0;
-    font-size: 1.5rem;
-    padding: 0.5rem;
-    background: rgba(30, 41, 59, 0.8);
-    border-radius: 0.5rem;
-}
-
-/* Media query pentru mobil (sub 768px) */
-@media (max-width: 767px) {
-    .hamburger {
-        display: block;
-    }
-
-    .sidebar {
-        display: block;
-        transform: translateX(-100%);
-    }
-
-    .sidebar.active {
-        transform: translateX(0);
-    }
-
-    .main-content {
-        margin-left: 0;
-        transition: margin-left 0.3s ease;
-    }
-
-    .main-content.active {
-        margin-left: 16rem;
-    }
-}
-
-/* Media query pentru tablete (768px-1024px) */
-@media (min-width: 768px) and (max-width: 1024px) {
-    .sidebar {
-        display: block;
-        width: 16rem;
-        transform: none;
-    }
-
-    .main-content {
-        margin-left: 16rem;
-        transition: margin-left 0.3s ease;
-    }
-
-    .hamburger {
-        display: none;
-    }
-
-    .card {
-        max-width: none;
-        width: 100%;
-    }
-}
-
-/* Media query pentru desktop mare (>1024px) */
-@media (min-width: 1025px) {
-    .sidebar {
-        display: block;
-        width: 20rem;
-        transform: none;
-    }
-
-    .main-content {
-        margin-left: 20rem;
-    }
-
-    .hamburger {
-        display: none;
-    }
 }
 
 /* -------------------------------- */
@@ -151,7 +68,6 @@ body {
     max-width: 200px !important;
     max-height: 200px !important;
     margin: 0 auto;
-    display: block;
 }
 
 /* Header specific pentru Dashboard */
