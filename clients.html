@@ -13,7 +13,7 @@
     <div id="particles-js"></div>
     <div class="flex">
         <!-- Sidebar -->
-        <div class="sidebar w-64 text-white shadow-lg hidden md:block lg:w-80">
+        <div class="sidebar w-64 text-white shadow-lg">
             <div class="p-6 text-2xl font-bold">Admin Panel</div>
             <ul class="mt-4">
                 <li id="nav-dashboard" class="sidebar-item p-4 flex items-center">
@@ -39,14 +39,25 @@
         <div class="main-content flex-1 p-8 relative z-10">
             <div class="flex justify-between items-center mb-8">
                 <h1 class="text-3xl font-bold text-white">Clienți</h1>
-                <a href="index.html" class="btn-neon text-white px-4 py-2 rounded-lg hidden md:block">Înapoi la Dashboard</a> <!-- Adăugăm butonul "Înapoi", ascuns pe mobil -->
+                <a href="index.html" class="btn-neon text-white px-4 py-2 rounded-lg">Înapoi la Dashboard</a>
             </div>
 
             <div class="card p-4 rounded-lg bg-gray-900 shadow-md mb-6 max-w-md ml-0 mr-auto">
                 <h3 class="text-lg font-semibold text-gray-300 mb-3">Lista Clienți</h3>
-                <div id="clients-list" class="space-y-3"> <!-- Înlocuim tabelul cu o listă de card-uri -->
-                    <!-- Rândurile clienților vor fi adăugate dinamic -->
-                </div>
+                <table class="min-w-full divide-y divide-gray-700">
+                    <thead class="bg-gray-800">
+                        <tr>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Nume</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Email</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Telefon</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Status</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Acțiuni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clients-table" class="divide-y divide-gray-700">
+                        <!-- Rândurile clienților vor fi adăugate dinamic -->
+                    </tbody>
+                </table>
                 <button id="add-client-btn" class="btn-neon text-white px-4 py-1 mt-3 rounded-lg text-sm">Adaugă Client</button>
             </div>
 
