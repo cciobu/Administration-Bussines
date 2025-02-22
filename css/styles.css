@@ -22,16 +22,16 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 16rem; /* Forțăm 64 în Tailwind (16rem) pentru consistență */
+    width: 16rem; /* Lățime default (256px) */
     height: 100%;
-    transition: width 0.3s ease, transform 0.3s ease; /* Adăugăm tranziție pentru transform */
+    transition: width 0.3s ease, transform 0.3s ease;
     backdrop-filter: blur(10px);
     background: rgba(30, 41, 59, 0.8);
     z-index: 10;
-    overflow-y: auto; /* Permite derularea dacă conținutul e lung */
-    display: block !important; /* Forțăm afișarea sidebar-ului */
-    visibility: visible !important; /* Asigurăm vizibilitatea */
-    transform: translateX(-100%); /* Ascundem sidebar-ul pe mobil, deplasându-l în stânga */
+    overflow-y: auto;
+    display: none; /* Ascuns implicit pe mobil */
+    visibility: visible !important;
+    transform: translateX(-100%); /* Ascuns pe mobil */
 }
 
 .sidebar:hover {
@@ -50,7 +50,7 @@ body {
 
 /* Meniu hamburger pe mobil */
 .hamburger {
-    display: none; /* Inițial ascuns pe desktop */
+    display: none;
     position: fixed;
     top: 1rem;
     left: 1rem;
@@ -64,27 +64,67 @@ body {
 }
 
 /* Media query pentru mobil (sub 768px) */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .hamburger {
-        display: block; /* Afișăm meniul hamburger pe mobil */
+        display: block;
     }
 
     .sidebar {
-        transform: translateX(-100%); /* Sidebar ascuns complet pe mobil */
-        width: 16rem; /* Păstrăm lățimea */
+        display: block;
+        transform: translateX(-100%);
     }
 
     .sidebar.active {
-        transform: translateX(0); /* Sidebar vizibil când e activ */
+        transform: translateX(0);
     }
 
     .main-content {
-        margin-left: 0; /* Eliminăm margin-left pe mobil */
-        transition: margin-left 0.3s ease; /* Adăugăm tranziție pentru margin */
+        margin-left: 0;
+        transition: margin-left 0.3s ease;
     }
 
     .main-content.active {
-        margin-left: 16rem; /* Margin-left când sidebar-ul e activ */
+        margin-left: 16rem;
+    }
+}
+
+/* Media query pentru tablete (768px-1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .sidebar {
+        display: block; /* Afișăm sidebar-ul pe tablete */
+        width: 16rem; /* Lățime fixă pe tablete */
+        transform: none; /* Fără ascundere */
+    }
+
+    .main-content {
+        margin-left: 16rem; /* Ajustăm margin-ul conținutului principal */
+        transition: margin-left 0.3s ease;
+    }
+
+    .hamburger {
+        display: none; /* Ascundem meniul hamburger pe tablete */
+    }
+
+    .card {
+        max-width: none; /* Asigurăm că card-urile ocupă toată lățimea pe tablete */
+        width: 100%;
+    }
+}
+
+/* Media query pentru desktop mare (>1024px) */
+@media (min-width: 1025px) {
+    .sidebar {
+        display: block;
+        width: 20rem; /* Lățime mai mare pe desktop */
+        transform: none;
+    }
+
+    .main-content {
+        margin-left: 20rem; /* Ajustăm margin-ul pentru desktop mare */
+    }
+
+    .hamburger {
+        display: none;
     }
 }
 
