@@ -44,4 +44,17 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
+
+    // Gestionare meniu hamburger pe mobil
+    const hamburger = document.createElement("div");
+    hamburger.className = "hamburger";
+    hamburger.innerHTML = "☰"; // Simbol hamburger
+    document.querySelector(".flex").insertBefore(hamburger, document.querySelector(".main-content"));
+
+    hamburger.addEventListener("click", () => {
+        const sidebar = document.querySelector(".sidebar");
+        const mainContent = document.querySelector(".main-content");
+        sidebar.classList.toggle("active");
+        mainContent.classList.toggle("active");
+    });
 });
