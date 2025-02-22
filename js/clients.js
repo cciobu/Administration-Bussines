@@ -1,180 +1,132 @@
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("Pagina Clienți încărcată.");
+
+    // Obținem clienții din localStorage
     let clients = getClients();
-    let editIndex = null;
-    let currentTablePage = 1;
-    const clientsPerPage = 50;
+    renderClients();
 
-    const tableBody = document.getElementById("client-table");
+    // Gestionare adăugare/editare client
     const addClientBtn = document.getElementById("add-client-btn");
-    const exportBtn = document.getElementById("export-btn");
-    const modal = document.getElementById("client-modal");
-    const modalTitle = document.getElementById("modal-title");
-    const form = document.getElementById("client-form");
-    const closeModalBtn = document.getElementById("close-modal");
-    const nameInput = document.getElementById("client-name");
-    const emailInput = document.getElementById("client-email");
-    const phoneInput = document.getElementById("client-phone");
-    const statusInput = document.getElementById("client-status");
-    const searchInput = document.getElementById("search-input");
-    const pagination = document.getElementById("pagination");
-
-    function renderClients(filter = "") {
-        tableBody.innerHTML = ""; // Resetăm tabelul
-        const filteredClients = clients.filter(client => 
-            client.name.toLowerCase().includes(filter.toLowerCase()) || 
-            client.email.toLowerCase().includes(filter.toLowerCase())
-        );
-        const start = (currentTablePage - 1) * clientsPerPage;
-        const end = start + clientsPerPage;
-        const paginatedClients = filteredClients.slice(start, end);
-
-        paginatedClients.forEach((client, index) => {
-            const globalIndex = clients.indexOf(client);
-            const rowHTML = `
-                <tr class="table-row" data-client-id="${globalIndex}">
-                    <td class="p-4"><a href="client-details.html?id=${globalIndex}" class="text-blue-400 hover:text-blue-300">${client.name}</a></td>
-                    <td class="p-4">${client.email}</td>
-                    <td class="p-4 ${client.status === 'Activ' ? 'status-active' : 'status-inactive'}">${client.status}</td>
-                    <td class="p-4">
-                        <button class="edit-btn text-blue-400 hover:text-blue-300" data-index="${globalIndex}">Editează</button>
-                        <button class="delete-btn text-red-400 ml-2 hover:text-red-300" data-index="${globalIndex}">Șterge</button>
-                    </td>
-                </tr>
-            `;
-            tableBody.insertAdjacentHTML("beforeend", rowHTML);
-        });
-
-        // Adăugăm event listener pe rânduri după ce sunt create
-        const rows = tableBody.querySelectorAll(".table-row");
-        rows.forEach(row => {
-            row.addEventListener("click", (e) => {
-                if (!e.target.classList.contains("edit-btn") && !e.target.classList.contains("delete-btn")) {
-                    const link = row.querySelector("a");
-                    if (link) {
-                        link.click();
-                    }
-                }
-            });
-        });
-
-        // Adăugăm event listeners pe butoane
-        tableBody.querySelectorAll(".edit-btn").forEach(btn => {
-            btn.addEventListener("click", () => editClient(btn.dataset.index));
-        });
-        tableBody.querySelectorAll(".delete-btn").forEach(btn => {
-            btn.addEventListener("click", () => deleteClient(btn.dataset.index));
-        });
-
-        const totalPages = Math.ceil(filteredClients.length / clientsPerPage);
-        renderPagination(totalPages);
-    }
-
-    function renderPagination(totalPages) {
-        pagination.innerHTML = "";
-        if (totalPages <= 1) return;
-
-        const prevBtn = document.createElement("button");
-        prevBtn.textContent = "Înapoi";
-        prevBtn.className = "page-btn text-white";
-        prevBtn.disabled = currentTablePage === 1;
-        prevBtn.addEventListener("click", () => {
-            if (currentTablePage > 1) {
-                currentTablePage--;
-                renderClients(searchInput.value);
-            }
-        });
-        pagination.appendChild(prevBtn);
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageBtn = document.createElement("button");
-            pageBtn.textContent = i;
-            pageBtn.className = `page-btn text-white ${i === currentTablePage ? 'active' : ''}`;
-            pageBtn.addEventListener("click", () => {
-                currentTablePage = i;
-                renderClients(searchInput.value);
-            });
-            pagination.appendChild(pageBtn);
-        }
-
-        const nextBtn = document.createElement("button");
-        nextBtn.textContent = "Înainte";
-        nextBtn.className = "page-btn text-white";
-        nextBtn.disabled = currentTablePage === totalPages;
-        nextBtn.addEventListener("click", () => {
-            if (currentTablePage < totalPages) {
-                currentTablePage++;
-                renderClients(searchInput.value);
-            }
-        });
-        pagination.appendChild(nextBtn);
-    }
-
-    searchInput.addEventListener("input", (e) => {
-        currentTablePage = 1;
-        renderClients(e.target.value);
-    });
-
-    exportBtn.addEventListener("click", () => {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(clients));
-        const downloadAnchor = document.createElement("a");
-        downloadAnchor.setAttribute("href", dataStr);
-        downloadAnchor.setAttribute("download", "clients.json");
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.click();
-        downloadAnchor.remove();
-    });
+    const clientModal = document.getElementById("client-modal");
+    const clientModalTitle = document.getElementById("client-modal-title");
+    const clientForm = document.getElementById("client-form");
+    const closeClientModal = document.getElementById("close-client-modal");
+    const clientNameInput = document.getElementById("client-name");
+    const clientEmailInput = document.getElementById("client-email");
+    const clientPhoneInput = document.getElementById("client-phone");
+    const clientStatusInput = document.getElementById("client-status");
+    let editClientIndex = null;
 
     addClientBtn.addEventListener("click", () => {
-        modalTitle.textContent = "Adaugă Client";
-        form.reset();
-        editIndex = null;
-        modal.classList.remove("hidden");
+        clientModalTitle.textContent = "Adaugă Client";
+        clientForm.reset();
+        editClientIndex = null;
+        clientModal.classList.remove("hidden");
     });
 
-    closeModalBtn.addEventListener("click", () => {
-        modal.classList.add("hidden");
+    closeClientModal.addEventListener("click", () => {
+        clientModal.classList.add("hidden");
     });
 
-    form.addEventListener("submit", (e) => {
+    clientForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const newClient = {
-            name: nameInput.value,
-            email: emailInput.value,
-            phone: phoneInput.value || "",
-            status: statusInput.value,
-            orders: []
+            name: clientNameInput.value,
+            email: clientEmailInput.value,
+            phone: clientPhoneInput.value || "",
+            status: clientStatusInput.value
         };
 
-        if (editIndex === null) {
+        if (editClientIndex === null) {
             clients.push(newClient);
         } else {
-            clients[editIndex] = { ...clients[editIndex], ...newClient };
-            editIndex = null;
+            clients[editClientIndex] = newClient;
+            editClientIndex = null;
         }
-
         saveClients(clients);
-        renderClients(searchInput.value);
-        modal.classList.add("hidden");
+        renderClients();
+        clientModal.classList.add("hidden");
     });
 
-    window.editClient = function(index) {
-        editIndex = index;
-        const client = clients[index];
-        nameInput.value = client.name;
-        emailInput.value = client.email;
-        phoneInput.value = client.phone || "";
-        statusInput.value = client.status;
-        modalTitle.textContent = "Editează Client";
-        modal.classList.remove("hidden");
-    };
+    function renderClients() {
+        const clientsTable = document.getElementById("clients-table");
+        clientsTable.innerHTML = "";
+        clients.forEach((client, index) => {
+            const row = document.createElement("tr");
+            row.className = "table-row";
+            row.innerHTML = `
+                <td class="py-4 px-4 text-sm text-gray-300">${client.name}</td>
+                <td class="py-4 px-4 text-sm text-gray-300">${client.email}</td>
+                <td class="py-4 px-4 text-sm text-gray-300">${client.phone || "N/A"}</td>
+                <td class="py-4 px-4 text-sm"><span class="status-${client.status.toLowerCase()}">${client.status}</span></td>
+                <td class="py-4 px-4 text-sm">
+                    <button class="edit-client-btn text-blue-400 hover:text-blue-500 text-xs px-2 py-1 bg-transparent border border-blue-600 rounded-lg" data-index="${index}">Editează</button>
+                    <button class="delete-client-btn text-red-400 hover:text-red-500 text-xs px-1 py-0.5 bg-transparent border border-red-600 rounded-lg" data-index="${index}">Șterge</button>
+                </td>
+            `;
+            clientsTable.appendChild(row);
 
-    window.deleteClient = function(index) {
+            row.querySelector(".edit-client-btn").addEventListener("click", () => editClient(index));
+            row.querySelector(".delete-client-btn").addEventListener("click", () => deleteClient(index));
+        });
+    }
+
+    function editClient(index) {
+        editClientIndex = index;
+        const client = clients[index];
+        clientNameInput.value = client.name;
+        clientEmailInput.value = client.email;
+        clientPhoneInput.value = client.phone || "";
+        clientStatusInput.value = client.status;
+        clientModalTitle.textContent = "Editează Client";
+        clientModal.classList.remove("hidden");
+    }
+
+    function deleteClient(index) {
         if (confirm("Sigur vrei să ștergi acest client?")) {
             clients.splice(index, 1);
             saveClients(clients);
-            renderClients(searchInput.value);
+            renderClients();
+        }
+    }
+
+    // Gestionare meniu hamburger pe mobil și tablete
+    const hamburger = document.createElement("div");
+    hamburger.className = "hamburger";
+    hamburger.innerHTML = "☰"; // Simbol hamburger
+    document.querySelector(".flex").insertBefore(hamburger, document.querySelector(".main-content"));
+
+    hamburger.addEventListener("click", () => {
+        const sidebar = document.querySelector(".sidebar");
+        const mainContent = document.querySelector(".main-content");
+        sidebar.classList.toggle("active");
+        mainContent.classList.toggle("active");
+    });
+
+    // Ajustăm comportamentul pe tablete pentru a preveni suprapunerea
+    const handleResize = () => {
+        const width = window.innerWidth;
+        const sidebar = document.querySelector(".sidebar");
+        const mainContent = document.querySelector(".main-content");
+
+        if (width <= 767) {
+            sidebar.classList.remove("active");
+            mainContent.classList.remove("active");
+            sidebar.style.transform = "translateX(-100%)";
+            mainContent.style.marginLeft = "0";
+        } else if (width <= 1024) {
+            sidebar.classList.remove("active");
+            mainContent.classList.remove("active");
+            sidebar.style.transform = "none";
+            mainContent.style.marginLeft = "16rem";
+        } else {
+            sidebar.classList.remove("active");
+            mainContent.classList.remove("active");
+            sidebar.style.transform = "none";
+            mainContent.style.marginLeft = "20rem";
         }
     };
 
-    renderClients(); // Inițializăm tabelul
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Aplica inițial
 });
