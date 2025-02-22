@@ -14,7 +14,7 @@
     <div id="particles-js"></div>
     <div class="flex">
         <!-- Sidebar -->
-        <div class="sidebar w-64 text-white shadow-lg">
+        <div class="sidebar w-64 text-white shadow-lg hidden md:block lg:w-80">
             <div class="p-6 text-2xl font-bold">Admin Panel</div>
             <ul class="mt-4">
                 <li id="nav-dashboard" class="sidebar-item p-4 flex items-center">
@@ -25,7 +25,7 @@
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                     <a href="clients.html">Clienți</a>
                 </li>
-                <li id="nav-analytics" class="sidebar-item p-4 flex items-center">
+                <li id="nav-analytics" class="sidebar-item p-4 bg-blue-700 font-semibold flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                     <a href="analytics.html">Analize</a>
                 </li>
@@ -45,7 +45,7 @@
                 <!-- Grafic mic în stânga -->
                 <div class="card p-6 rounded-lg w-full max-w-md">
                     <h3 class="text-lg font-semibold text-gray-300 mb-4">Distribuția clienților</h3>
-                    <canvas id="clientsChart" width="300" height="300" style="max-width: 300px; max-height: 300px;"></canvas> <!-- Dimensiuni fixe și inline style -->
+                    <canvas id="clientsChart" width="300" height="300" style="max-width: 300px !important; max-height: 300px !important; width: 300px !important; height: 300px !important; display: block; margin: 0 auto;"></canvas>
                 </div>
                 <!-- Spațiu rezervat pentru viitoare tabele -->
                 <div class="text-gray-300 flex items-center justify-center">
