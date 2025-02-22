@@ -13,7 +13,7 @@
     <div id="particles-js"></div>
     <div class="flex">
         <!-- Sidebar -->
-        <div class="sidebar w-64 text-white shadow-lg">
+        <div class="sidebar w-64 text-white shadow-lg hidden md:block lg:w-80">
             <div class="p-6 text-2xl font-bold">Admin Panel</div>
             <ul class="mt-4">
                 <li id="nav-dashboard" class="sidebar-item p-4 flex items-center">
@@ -39,58 +39,65 @@
         <div class="main-content flex-1 p-8 relative z-10">
             <div class="flex justify-between items-center mb-8">
                 <h1 class="text-3xl font-bold text-white">Clienți</h1>
-                <div class="flex items-center space-x-4">
-                    <input type="text" id="search-input" placeholder="Caută..." class="p-2 border rounded-lg bg-gray-800 text-white border-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <button id="export-btn" class="btn-neon text-white px-5 py-2 rounded-lg">Exportă</button>
-                    <button id="add-client-btn" class="btn-neon text-white px-5 py-2 rounded-lg">Adaugă Client</button>
-                </div>
+                <a href="index.html" class="btn-neon text-white px-4 py-2 rounded-lg hidden md:block">Înapoi la Dashboard</a> <!-- Adăugăm butonul "Înapoi", ascuns pe mobil -->
             </div>
-            <div class="bg-gray-800 shadow-md rounded-xl overflow-hidden">
-                <table class="w-full">
-                    <thead>
-                        <tr class="bg-gray-700 text-gray-300">
-                            <th class="p-4 text-left font-semibold">Nume</th>
-                            <th class="p-4 text-left font-semibold">Email</th>
-                            <th class="p-4 text-left font-semibold">Status</th>
-                            <th class="p-4 text-left font-semibold">Acțiuni</th>
+
+            <div class="card p-4 rounded-lg bg-gray-900 shadow-md mb-6 max-w-md ml-0 mr-auto">
+                <h3 class="text-lg font-semibold text-gray-300 mb-3">Lista Clienți</h3>
+                <table class="min-w-full divide-y divide-gray-700">
+                    <thead class="bg-gray-800">
+                        <tr>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Nume</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Email</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Telefon</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Status</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-300">Acțiuni</th>
                         </tr>
                     </thead>
-                    <tbody id="client-table"></tbody>
+                    <tbody id="clients-table" class="divide-y divide-gray-700">
+                        <!-- Rândurile clienților vor fi adăugate dinamic -->
+                    </tbody>
                 </table>
+                <button id="add-client-btn" class="btn-neon text-white px-4 py-1 mt-3 rounded-lg text-sm">Adaugă Client</button>
             </div>
-            <div id="pagination" class="flex justify-center mt-4 space-x-2"></div>
 
-       <!-- Modal -->
-<div id="client-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center">
-    <div class="modal-content p-6 rounded-xl w-96">
-        <h2 id="modal-title" class="text-xl font-bold text-white mb-6">Adaugă Client</h2>
-        <form id="client-form">
-            <div class="mb-4">
-                <label class="block text-gray-300 font-medium">Nume</label>
-                <input type="text" id="client-name" class="w-full p-2 border rounded-lg bg-gray-800 text-white border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            <!-- Modal Adăugare/Editare Client -->
+            <div id="client-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center">
+                <div class="modal-content p-6 rounded-lg bg-gray-900 w-96 shadow-lg border border-blue-600">
+                    <h2 id="client-modal-title" class="text-xl font-bold text-white mb-6">Adaugă Client</h2>
+                    <form id="client-form">
+                        <div class="mb-4">
+                            <label class="block text-gray-300 font-medium">Nume</label>
+                            <input type="text" id="client-name" class="w-full p-2 border rounded-lg bg-gray-800 text-white border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-300 font-medium">Email</label>
+                            <input type="email" id="client-email" class="w-full p-2 border rounded-lg bg-gray-800 text-white border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-300 font-medium">Telefon</label>
+                            <input type="tel" id="client-phone" class="w-full p-2 border rounded-lg bg-gray-800 text-white border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-300 font-medium">Status</label>
+                            <select id="client-status" class="w-full p-2 border rounded-lg bg-gray-800 text-white border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                <option value="Activ">Activ</option>
+                                <option value="Inactiv">Inactiv</option>
+                            </select>
+                        </div>
+                        <div class="flex justify-end space-x-2">
+                            <button type="button" id="close-client-modal" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition">Anulează</button>
+                            <button type="submit" class="btn-neon px-4 py-2 text-white rounded-lg">Salvează</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="mb-4">
-                <label class="block text-gray-300 font-medium">Email</label>
-                <input type="email" id="client-email" class="w-full p-2 border rounded-lg bg-gray-800 text-white border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+
+            <!-- Lightbox -->
+            <div id="lightbox" class="hidden fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+                <img id="lightbox-image" class="max-w-full max-h-full rounded-lg" alt="Imagine client">
+                <button id="close-lightbox" class="absolute top-4 right-4 text-white text-2xl">×</button>
             </div>
-            <div class="mb-4">
-                <label class="block text-gray-300 font-medium">Număr de telefon</label>
-                <input type="tel" id="client-phone" class="w-full p-2 border rounded-lg bg-gray-800 text-white border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-            <div class="mb-6">
-                <label class="block text-gray-300 font-medium">Status</label>
-                <select id="client-status" class="w-full p-2 border rounded-lg bg-gray-800 text-white border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="Activ">Activ</option>
-                    <option value="Inactiv">Inactiv</option>
-                </select>
-            </div>
-            <div class="flex justify-end space-x-2">
-                <button type="button" id="close-modal" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition">Anulează</button>
-                <button type="submit" class="btn-neon px-4 py-2 text-white rounded-lg">Salvează</button>
-            </div>
-        </form>
-    </div>
-</div>
         </div>
     </div>
 
